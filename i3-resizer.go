@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	// "log"
 	"os"
 	"os/exec"
 )
@@ -13,6 +11,12 @@ type Msg struct {
 }
 
 func main() {
+	if len(os.Args) < 5 {
+		println("Usage: i3-resizer <left|right|up|down> <left|right|up|down> <px> <unit>")
+		println("e.g. i3-resizer left right 40 px")
+		os.Exit(1)
+	}
+
 	args := os.Args[1:5]
 	cmd := exec.Command("i3-msg", "resize", "grow", args[0], args[2], args[3])
 	out, _ := cmd.Output()
@@ -21,7 +25,7 @@ func main() {
 
 	err := json.Unmarshal(out, &msg)
 	if err != nil {
-		fmt.Println("error:", err)
+		println("error:", err)
 	}
 
 	if !msg[0].Success {
